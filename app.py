@@ -99,3 +99,17 @@ def logout():
     """Handle logout of user."""
     flash(f"Goodbye!", "success")
     return redirect("/login")
+
+
+@app.route('/')
+def homepage():
+    """Show homepage:"""
+
+    # if g.user:
+    #     favorites = (Favorites.query.filter((Favorites.all())
+    #     print(favorites)
+
+    #     return render_template('home.html')
+
+    # else:
+    return render_template('gen-home.html')

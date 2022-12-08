@@ -5,6 +5,27 @@ bcrypt = Bcrypt()
 db = SQLAlchemy()
 
 
+favorites = db.Table(
+    'favorites', 
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', primary_key=True)),
+    db.Column('book_id', db.Integer, db.ForeignKey('books.id', primary_key=True)),
+)
+
+
+to_be_read = db.Table(
+    'to_be_read',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', primary_key=True)),
+    db.Column('book_id', db.Integer, db.ForeignKey('books.id', primary_key=True)),
+)
+
+
+read = db.Table(
+    'read',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id', primary_key=True)),
+    db.Column('book_id', db.Integer, db.ForeignKey('books.id', primary_key=True)),
+)
+
+
 class Users(db.Model):
     """User of app"""
 
@@ -116,27 +137,6 @@ class Authors(db.Model):
         db.Integer,
         primary_key=True,
     )
-
-
-favorites = db.Table(
-    'favorites', 
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id', primary_key=True)),
-    db.Column('book_id', db.Integer, db.ForeignKey('books.id', primary_key=True)),
-)
-
-
-to_be_read = db.Table(
-    'to_be_read',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id', primary_key=True)),
-    db.Column('book_id', db.Integer, db.ForeignKey('books.id', primary_key=True)),
-)
-
-
-read = db.Table(
-    'read',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id', primary_key=True)),
-    db.Column('book_id', db.Integer, db.ForeignKey('books.id', primary_key=True)),
-)
 
 
 def connect_db(app):
