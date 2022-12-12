@@ -14,6 +14,33 @@
 </head>
 
 <body>
+    <nav>
+        <div>
+          <div>
+            <a href="/">
+              <img src="">
+              <span>Story of My Shelf</span>
+            </a>
+          </div>
+          <ul>
+            {% if not g.user %}
+            <li><a href="/signup">Sign up</a></li>
+            <li><a href="/login">Log in</a></li>
+            {% else %}
+            <li>
+              <a href="/users/{{ g.user.id }}">
+                <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
+              </a>
+            </li>
+            <li><a href="/logout">Log out</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+      <div>
+        {% for category, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
     {% block content %}
     {% endblock %} 
 </body>

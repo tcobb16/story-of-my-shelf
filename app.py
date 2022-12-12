@@ -12,7 +12,7 @@ CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///warbler'))
+    os.environ.get('DATABASE_URL', 'postgresql:///books'))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -44,6 +44,7 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+        g.user = None
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -58,20 +59,20 @@ def signup():
                 username=form.username.data,
                 password=form.password.data,
                 email=form.email.data,
-                image_url=form.image_url.data or Users.image_url.default.arg,
+                profile_pic_url=form.image_url.data or Users.profile_pic_url.default.arg,
             )
             db.session.commit()
 
         except IntegrityError:
             flash("Username already taken", 'danger')
-            return render_template('users/signup.html', form=form)
+            return render_template('signup.html', form=form)
 
         do_login(user)
 
-        return redirect("/")
+        return redirect("/login")
 
     else:
-        return render_template('users/signup.html', form=form)
+        return render_template('signup.html', form=form)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -87,29 +88,29 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
-            return redirect("/")
+            return redirect("/user-home.html")
 
         flash("Invalid credentials.", 'danger')
 
-    return render_template('users/login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
+
+    do_logout()
     flash(f"Goodbye!", "success")
+
     return redirect("/login")
 
 
 @app.route('/')
 def homepage():
-    """Show homepage:"""
+    """Show Logged in user home page or general home page"""
 
-    # if g.user:
-    #     favorites = (Favorites.query.filter((Favorites.all())
-    #     print(favorites)
+    if g.user:
+        return render_template('user-home.html', user=g.user)   
 
-    #     return render_template('home.html')
-
-    # else:
-    return render_template('gen-home.html')
+    else:
+        return render_template('gen-home.html')

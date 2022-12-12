@@ -58,11 +58,11 @@ class Users(db.Model):
         default="/static/images/default-profile-pic.png",
     )
 
-    favorites = db.relationship('Books', secondary=favorites, lazy='subquery', backref=db.backref('users', lazy=True))
+    favorites = db.relationship('Books', secondary=favorites, lazy='subquery', backref=db.backref('users_favorites', lazy=True))
 
-    to_be_read = db.relationship('Books', secondary=to_be_read, lazy='subquery', backref=db.backref('users', lazy=True))
+    to_be_read = db.relationship('Books', secondary=to_be_read, lazy='subquery', backref=db.backref('users_to_be_read', lazy=True))
 
-    read = db.relationship('Books', secondary=read, lazy='subquery', backref=db.backref('users', lazy=True))
+    read = db.relationship('Books', secondary=read, lazy='subquery', backref=db.backref('users_read', lazy=True))
 
     @classmethod
     def signup(cls, username, email, password, profile_pic_url):
