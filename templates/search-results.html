@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Search Results</h1>
+
+<div>
+    <ul>
+    {% for book in books %}
+        <li>
+            <div>
+                <img src="{{ book['cover_img'] }}">
+                <p>{{ book['title'] }}</p>
+                <p>{{ book['author'] }}</p>
+                <form method="POST" action="/users/{{ user_id }}/favorites">
+                    <input hidden="true" type="text" name="title" value="{{ book['title'] }}">
+                    <input hidden="true" type="text" name="author" value="{{ book['author'] }}">
+                    <input hidden="true" type="text" name="genre" value="{{ book['genre'] }}">
+                    <input hidden="true" type="text" name="cover_img" value="{{ book['cover_img'] }}">
+                    <input type="submit" value="Favorite">
+                </form>
+                <form method="POST" action="/users/{{ user_id }}/read">
+                    <input hidden="true" type="text" name="title" value="{{ book['title'] }}">
+                    <input hidden="true" type="text" name="author" value="{{ book['author'] }}">
+                    <input hidden="true" type="text" name="genre" value="{{ book['genre'] }}">
+                    <input hidden="true" type="text" name="cover_img" value="{{ book['cover_img'] }}">
+                    <input type="submit" value="Read"></form>
+                <form method="POST" action="/users/{{ user_id }}/want-to-read">
+                    <input hidden="true" type="text" name="title" value="{{ book['title'] }}">
+                    <input hidden="true" type="text" name="author" value="{{ book['author'] }}">
+                    <input hidden="true" type="text" name="genre" value="{{ book['genre'] }}">
+                    <input hidden="true" type="text" name="cover_img" value="{{ book['cover_img'] }}">
+                    <input type="submit" value="Want to Read"></form>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+    
+</div>
+{% endblock %}

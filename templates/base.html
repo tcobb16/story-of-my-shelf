@@ -7,41 +7,36 @@
     <title>Story of My Shelf</title>
 
     <script src="https://unpkg.com/jquery"></script>
-    <link rel="stylesheet"
-        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/stylesheets/style.css">
-    <script src="https://unpkg.com/bootstrap"></script>
 </head>
 
 <body>
-    <nav>
-        <div>
-          <div>
-            <a href="/">
-              <img src="">
-              <span>Story of My Shelf</span>
-            </a>
-          </div>
-          <ul>
-            {% if not g.user %}
-            <li><a href="/signup">Sign up</a></li>
-            <li><a href="/login">Log in</a></li>
-            {% else %}
-            <li>
-              <a href="/users/{{ g.user.id }}">
-                <img src="{{ g.user.image_url }}" alt="{{ g.user.username }}">
-              </a>
-            </li>
-            <li><a href="/logout">Log out</a></li>
-            {% endif %}
-          </ul>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+    <a class="navbar-brand" href="/">Story of My Shelf</a>
+    <div class="form-inline">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          {% if not g.user %}
+          <a class="nav-item nav-link active" href="/signup">Sign Up</a>
+          <a class="nav-item nav-link active" href="/login">Log In</a>
+          {% else %}
+          <a class="nav-item" href="/users/{{ g.user.id }}">
+            <img src="{{ g.user.profile_pic_url }}" width="45" height="45" alt="{{ g.user.username }}">
+          </a>
+          <a class="nav-item nav-link" href="/logout">Log Out</a>
+          {% endif %}
         </div>
-      </nav>
-      <div>
-        {% for category, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
+      </div>
+    </div>
+  </nav>
+  <div>
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
     {% block content %}
     {% endblock %} 
+  </div>
+
 </body>
 </html>

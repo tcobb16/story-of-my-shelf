@@ -62,7 +62,7 @@ class Users(db.Model):
 
     to_be_read = db.relationship('Books', secondary=to_be_read, lazy='subquery', backref=db.backref('users_to_be_read', lazy=True))
 
-    read = db.relationship('Books', secondary=read, lazy='subquery', backref=db.backref('users_read', lazy=True))
+    read = db.relationship('Books', secondary=read, lazy='subquery', backref=db.backref('users_read', lazy=True)) 
 
     @classmethod
     def signup(cls, username, email, password, profile_pic_url):
@@ -103,6 +103,13 @@ class Books(db.Model):
 
     __tablename__ = 'books'
 
+    def __init__(self, title, author, genre, cover_img=None) -> None:
+        super().__init__()
+        self.title = title
+        self.author = author
+        self.genre = genre
+        self.cover_img = cover_img
+
     id = db.Column(
         db.Integer,
         primary_key=True,
@@ -114,29 +121,30 @@ class Books(db.Model):
     )
 
     author = db.Column(
-        db.Integer,
-        db.ForeignKey('authors.id'),
-        unique=True,
+        db.Text,
+        nullable = False
     )
 
     genre = db.Column(
         db.Text,
+        default="Unknown"
     )
 
     cover_img = db.Column(
         db.Text,
+        default = '/static/images/default-book-pic.jpeg'
     )
 
 
-class Authors(db.Model):
-    """Authors"""
+# class Authors(db.Model):
+#     """Authors"""
 
-    __tablename__ = 'authors'
+#     __tablename__ = 'authors'
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True,
-    )
+#     id = db.Column(
+#         db.Integer,
+#         primary_key=True,
+#     )
 
 
 def connect_db(app):

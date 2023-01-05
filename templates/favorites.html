@@ -1,0 +1,21 @@
+{% extends 'user-home.html' %}
+
+{% block content %}
+
+{% for book in books %}
+
+<div>
+  <div>
+    <img src="{{ book.cover_img }}" alt="">
+  </div>
+  <div>
+    <form method="POST"
+    action="/users/unfavorite/{{ book.id }}">
+    <button class="btn btn-primary btn-sm">Unfavorite</button>
+    </form>
+  </div>
+</div>
+
+{% endfor %}
+
+{% endblock %} 

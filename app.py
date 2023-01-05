@@ -1,11 +1,12 @@
 import os
 
-from flask import Flask, render_template, request, flash, redirect, session, g
+from flask import Flask, render_template, request, flash, redirect, session, g, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import AddUserForm, LoginForm
-from models import db, connect_db, Users, Books, Authors
+from forms import AddUserForm, LoginForm, SearchForm
+from models import db, connect_db, Users, Books
+from api import search_books
 
 CURR_USER_KEY = "curr_user"
 
@@ -105,12 +106,151 @@ def logout():
     return redirect("/login")
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def homepage():
     """Show Logged in user home page or general home page"""
 
     if g.user:
-        return render_template('user-home.html', user=g.user)   
+
+        return redirect(url_for('.user_homepage')) 
 
     else:
         return render_template('gen-home.html')
+
+
+@app.route('/user-home.html', methods=['GET', 'POST'])
+def user_homepage():
+    """Show logged in user home page"""
+    if request.form:
+        title = request.form['title']
+        author = request.form['author']
+        genre = request.form['genre']
+        return redirect(url_for('.get_books', title=title, author=author, genre=genre))
+
+    return render_template('user-home.html', user=g.user, form=SearchForm())
+
+
+@app.route('/users/<int:user_id>/favorites', methods=['GET', 'POST'])
+def favorites(user_id):
+    """show list of user's favorite books or add books to list"""
+    if request.method == 'POST':
+        if request.form:
+            title = request.form['title']
+            author = request.form['author']
+            genre = request.form['genre']
+            cover_img = request.form['cover_img']
+            favorited_book = Books.query.filter_by(title=title, author=author, genre=genre).first()
+
+            if favorited_book is None:
+                db.session.add(Books(title, author, genre, cover_img=cover_img))
+                db.session.commit()
+                favorited_book = Books.query.filter_by(title=title, author=author, genre=genre).first()
+                if not favorited_book:
+                    return ('Error adding new book to database', 500)
+
+
+            user = Users.query.get_or_404(user_id)
+            if favorited_book in user.favorites:
+                print (f'Removing {favorited_book.id} {title} from Favorites')
+                user.favorites.remove(favorited_book)
+            else:
+                print (f'Adding {favorited_book.id} {title} to Favorites')
+                user.favorites.append(favorited_book)
+            db.session.commit()
+            return ('', 200)
+
+        
+        else:
+            return ('bad request', 400)
+
+    user = Users.query.get_or_404(user_id)
+
+
+    return render_template('favorites.html', books=user.favorites)
+
+
+@app.route('/users/<int:user_id>/read', methods=['GET', 'POST'])
+def readbooks(user_id):
+    """show list of user's already read books"""
+
+    if request.method == 'POST':
+        if request.form:
+            title = request.form['title']
+            author = request.form['author']
+            genre = request.form['genre']
+            cover_img = request.form['cover_img']
+            read_book = Books.query.filter_by(title=title, author=author, genre=genre).first()
+
+            if read_book is None:
+                db.session.add(Books(title, author, genre, cover_img=cover_img))
+                db.session.commit()
+                read_book = Books.query.filter_by(title=title, author=author, genre=genre).first()
+                if not read_book:
+                    return ('Error adding new book to database', 500)
+
+
+            user = Users.query.get_or_404(user_id)
+            if read_book in user.read:
+                print (f'Removing {read_book.id} {title} from Read')
+                user.read.remove(read_book)
+            else:
+                print (f'Adding {read_book.id} {title} to Read')
+                user.read.append(read_book)
+            db.session.commit()
+            return ('', 200)
+    
+        else:
+            return ('bad request', 400)
+
+    user = Users.query.get_or_404(user_id)
+
+    return render_template('read.html', books=user.read)
+
+
+@app.route('/users/<int:user_id>/want-to-read', methods=['GET', 'POST'])
+def to_read(user_id):
+    """show list of user's to be read books"""
+    if request.method == 'POST':
+        if request.form:
+            title = request.form['title']
+            author = request.form['author']
+            genre = request.form['genre']
+            cover_img = request.form['cover_img']
+            to_be_read_book = Books.query.filter_by(title=title, author=author, genre=genre).first()
+
+            if to_be_read_book is None:
+                db.session.add(Books(title, author, genre, cover_img=cover_img))
+                db.session.commit()
+                to_be_read_book = Books.query.filter_by(title=title, author=author, genre=genre).first()
+                if not to_be_read_book:
+                    return ('Error adding new book to database', 500)
+
+
+            user = Users.query.get_or_404(user_id)
+            if to_be_read_book in user.to_be_read:
+                print (f'Removing {to_be_read_book.id} {title} from To Be Read')
+                user.to_be_read.remove(to_be_read_book)
+            else:
+                print (f'Adding {to_be_read_book.id} {title} to To Be Read')
+                user.to_be_read.append(to_be_read_book)
+            db.session.commit()
+            return ('', 200)
+
+        else:
+            return ('bad request', 400)
+
+    user = Users.query.get_or_404(user_id)
+
+    return render_template('to-be-read.html', books=user.to_be_read)
+
+
+@app.route('/books')
+def get_books():
+    """search for books by title, author, and/or genre"""
+    title = request.args.get('title')
+    author = request.args.get('author')
+    genre = request.args.get('genre')
+
+    returned_books = search_books(title=title, author=author, genre=genre)
+
+    return render_template('search-results.html', user_id=g.user.id, books=returned_books)

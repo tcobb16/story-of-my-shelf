@@ -1,0 +1,28 @@
+{% extends 'user-home.html' %}
+
+{% block content %}
+
+{% for book in books %}
+
+<div>
+  <div>
+    <img src="{{ book.cover_img }}" alt="">
+  </div>
+  <div>
+    <form method="POST"
+    action="/users/not-read/{{ book.id }}">
+    <button class="btn btn-primary btn-sm">Remove from Read</button>
+    </form>
+  </div>
+  <div>
+    <form method="POST"
+    action="/users/favorites/{{ book.id }}">
+    <button class="btn btn-primary btn-sm">Favorite</button>
+    </form>
+  </div>
+</div>
+           
+
+{% endfor %}
+
+{% endblock %} 

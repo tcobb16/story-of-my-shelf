@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length
 
 
@@ -26,3 +26,41 @@ class EditForm(FlaskForm):
     email = StringField('E-mail', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[Length(min=4)])
     image_url = StringField('(Optional) Image URL')
+
+
+
+class SearchForm(FlaskForm):
+    """Form for searching for book(s)"""
+
+    title = StringField('title')
+    author = StringField('author')
+    genre = StringField('genre')
+
+
+class ReturnedBooks(FlaskForm):
+    """Return list of dicts of search results"""
+    title = StringField('title')
+    author = StringField('author')
+    genre = StringField('genre')
+    cover_img = StringField('thumbnail')
+
+
+class FavoriteBooks(FlaskForm):
+    title = StringField('title')
+    author = StringField('author')
+    genre = StringField('genre')
+    cover_img = StringField('thumbnail')
+
+
+class ToBeRead(FlaskForm):
+    title = StringField('title')
+    author = StringField('author')
+    genre = StringField('genre')
+    cover_img = StringField('thumbnail')
+
+
+class ReadBooks(FlaskForm):
+    title = StringField('title')
+    author = StringField('author')
+    genre = StringField('genre')
+    cover_img = StringField('thumbnail')
