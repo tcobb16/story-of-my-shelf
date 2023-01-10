@@ -9,16 +9,22 @@
     <img src="{{ book.cover_img }}" alt="">
   </div>
   <div>
-    <form method="POST"
-    action="/users/not-read/{{ book.id }}">
-    <button class="btn btn-primary btn-sm">Remove from Read</button>
-    </form>
+    <form method="POST" action="/users/{{ user_id }}/read">
+      <input hidden="true" type="text" name="title" value="{{ book['title'] }}">
+      <input hidden="true" type="text" name="author" value="{{ book['author'] }}">
+      <input hidden="true" type="text" name="genre" value="{{ book['genre'] }}">
+      <input hidden="true" type="text" name="cover_img" value="{{ book['cover_img'] }}">
+      <input type="submit" value="Remove from Read">
+  </form>
   </div>
   <div>
-    <form method="POST"
-    action="/users/favorites/{{ book.id }}">
-    <button class="btn btn-primary btn-sm">Favorite</button>
-    </form>
+    <form method="POST" action="/users/{{ user_id }}/favorites">
+      <input hidden="true" type="text" name="title" value="{{ book['title'] }}">
+      <input hidden="true" type="text" name="author" value="{{ book['author'] }}">
+      <input hidden="true" type="text" name="genre" value="{{ book['genre'] }}">
+      <input hidden="true" type="text" name="cover_img" value="{{ book['cover_img'] }}">
+      <input type="submit" value="Favorite">
+  </form>
   </div>
 </div>
            

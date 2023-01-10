@@ -157,7 +157,7 @@ def favorites(user_id):
                 print (f'Adding {favorited_book.id} {title} to Favorites')
                 user.favorites.append(favorited_book)
             db.session.commit()
-            return ('', 200)
+            return render_template('favorites.html', books=user.favorites, user_id=user_id)
 
         
         else:
@@ -166,7 +166,7 @@ def favorites(user_id):
     user = Users.query.get_or_404(user_id)
 
 
-    return render_template('favorites.html', books=user.favorites)
+    return render_template('favorites.html', books=user.favorites, user_id=user_id)
 
 
 @app.route('/users/<int:user_id>/read', methods=['GET', 'POST'])
@@ -197,14 +197,14 @@ def readbooks(user_id):
                 print (f'Adding {read_book.id} {title} to Read')
                 user.read.append(read_book)
             db.session.commit()
-            return ('', 200)
+            return render_template('read.html', books=user.read, user_id=user_id)
     
         else:
             return ('bad request', 400)
 
     user = Users.query.get_or_404(user_id)
 
-    return render_template('read.html', books=user.read)
+    return render_template('read.html', books=user.read, user_id=user_id)
 
 
 @app.route('/users/<int:user_id>/want-to-read', methods=['GET', 'POST'])
@@ -234,14 +234,14 @@ def to_read(user_id):
                 print (f'Adding {to_be_read_book.id} {title} to To Be Read')
                 user.to_be_read.append(to_be_read_book)
             db.session.commit()
-            return ('', 200)
+            return render_template('to-be-read.html', books=user.to_be_read, user_id=user_id)
 
         else:
             return ('bad request', 400)
 
     user = Users.query.get_or_404(user_id)
 
-    return render_template('to-be-read.html', books=user.to_be_read)
+    return render_template('to-be-read.html', books=user.to_be_read, user_id=user_id)
 
 
 @app.route('/books')
