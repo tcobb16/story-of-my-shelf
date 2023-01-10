@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, g, 
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 
-from forms import AddUserForm, LoginForm, SearchForm
+from forms import AddUserForm, LoginForm, SearchForm, EditForm
 from models import db, connect_db, Users, Books
 from api import search_books
 
@@ -118,7 +118,7 @@ def homepage():
         return render_template('gen-home.html')
 
 
-@app.route('/user-home.html', methods=['GET', 'POST'])
+@app.route('/user-home', methods=['GET', 'POST'])
 def user_homepage():
     """Show logged in user home page"""
     if request.form:
@@ -254,3 +254,25 @@ def get_books():
     returned_books = search_books(title=title, author=author, genre=genre)
 
     return render_template('search-results.html', user_id=g.user.id, books=returned_books)
+
+
+@app.route('/users/<int:user_id>/edit', methods=['GET', 'POST'])
+def edit_user(user_id):
+    """edit user profile"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = Users.query.get_or_404(user_id)
+
+    if request.form:
+        
+        user.username = request.form['username']
+        user.email = request.form['email']
+        user.image_url = request.form['image_url'] if request.form['image_url'] else '/static/images/default-profile-pic.jpeg'
+
+        db.session.commit()
+        return redirect('/user-home')
+
+    return render_template('edit.html', user=user, form=EditForm())
