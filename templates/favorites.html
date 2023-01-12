@@ -4,7 +4,7 @@
 
 {% for book in books %}
 
-<div>
+<div style="display: flex; justify-content: left; padding: 10px;">
   <div>
     <img src="{{ book.cover_img }}" alt="">
   </div>
@@ -14,9 +14,8 @@
       <input hidden="true" type="text" name="author" value="{{ book['author'] }}">
       <input hidden="true" type="text" name="genre" value="{{ book['genre'] }}">
       <input hidden="true" type="text" name="cover_img" value="{{ book['cover_img'] }}">
-      <input type="submit" value="Unfavorite">
+      <input type="submit" class="btn btn-primary bg-dark border-primary-subtle rounded-3" value="Unfavorite">
   </form>
-    <!-- <button class="btn btn-primary btn-sm">Unfavorite</button> -->
   </div>
 </div>
 

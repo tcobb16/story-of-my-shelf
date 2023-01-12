@@ -89,7 +89,7 @@ def login():
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
-            return redirect("/user-home.html")
+            return redirect("/user-home")
 
         flash("Invalid credentials.", 'danger')
 

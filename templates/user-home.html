@@ -10,7 +10,7 @@
                  alt="Image for {{ g.user.username }}">
             <p>{{ g.user.username }}</p>
           </a>
-          <div>
+          <div class="bg-dark-subtle border-primary-subtle rounded-3" style="text-align: center; padding: 10px;">
             <form method="POST">
               {{ form.hidden_tag() }}
 
@@ -20,29 +20,31 @@
                 {% endfor %}
                 {{ field(placeholder=field.label.text, class="form-control") }}
               {% endfor %}
-              <button class="btn">Search</button>
+              <button class="btn btn-primary bg-dark border-primary-subtle rounded-3">Search</button>
             </form>
           </div>
-          <ul>
-            <li>
-              <p>Favorites</p>
-              <h4>
-                <a href="/users/{{ g.user.id }}/favorites">{{ g.user.favorites | length }}</a>
-              </h4>
-            </li>
-            <li>
-              <p>To Be Read</p>
-              <h4>
-                <a href="/users/{{ g.user.id }}/want-to-read">{{ g.user.to_be_read | length }}</a>
-              </h4>
-            </li>
-            <li>
-              <p>Read</p>
-              <h4>
-                <a href="/users/{{ g.user.id }}/read">{{ g.user.read | length }}</a>
-              </h4>
-            </li>
-          </ul>
+          <div class="ul-div">
+            <ul class="list-group list-group-horizontal" style="display: centered;">
+              <li class="list-group-item">
+                <p>Favorites</p>
+                <h4>
+                  <a href="/users/{{ g.user.id }}/favorites">{{ g.user.favorites | length }}</a>
+                </h4>
+              </li>
+              <li class="list-group-item">
+                <p>To Be Read</p>
+                <h4>
+                  <a href="/users/{{ g.user.id }}/want-to-read">{{ g.user.to_be_read | length }}</a>
+                </h4>
+              </li>
+              <li class="list-group-item">
+                <p>Read</p>
+                <h4>
+                  <a href="/users/{{ g.user.id }}/read">{{ g.user.read | length }}</a>
+                </h4>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

@@ -2,10 +2,9 @@
 
 {% block content %}
 
-  <div>
-    <div>
-      <h2>Edit Your Profile.</h2>
-      <form method="POST" id="edit_form">
+<h2 style="text-align: center;">Edit Your Profile.</h2>  
+<div class="bg-dark-subtle border-primary-subtle rounded-3" style="display: flex; justify-content: center;">
+      <form method="POST" id="edit_form" style="width: 50%;">
         {{ form.hidden_tag() }}
 
         {% for field in form if field.widget.input_type != 'hidden' and field.name != 'password' %}
@@ -26,11 +25,10 @@
         {{ form.password(placeholder="Password Please", class="form-control") }}
 
         <div class="edit-btn-area">
-          <button class="btn btn-success">Edit My Profile!</button>
+          <button class="btn btn-primary bg-dark border-primary-subtle rounded-3">Edit My Profile!</button>
           <a href="/{{ user_id }}" class="btn btn-outline-secondary">Cancel</a>
         </div>
       </form>
-    </div>
   </div>
 
 {% endblock %}
