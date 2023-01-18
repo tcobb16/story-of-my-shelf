@@ -276,3 +276,7 @@ def edit_user(user_id):
         return redirect('/user-home')
 
     return render_template('edit.html', user=user, form=EditForm())
+
+
+if __name__ == '__main__':
+    app.run()
