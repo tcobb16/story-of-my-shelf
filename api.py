@@ -1,9 +1,10 @@
+import os
 import requests
 import urllib.parse
 from typing import List, Dict, Any
 
 base_url = 'https://www.googleapis.com/books/v1/volumes'
-api_key = 'AIzaSyCrHfJF9K9osb60UM7yWzTwYDnBZ97t5U4'
+api_key = os.environ.get('GOOGLE_API_KEY', '')
 
 def search_books(title=None, author=None, genre=None) -> List[Dict[str, Any]]:
 
